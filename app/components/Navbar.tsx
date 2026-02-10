@@ -94,6 +94,12 @@ export default function Navbar() {
             </span>
           )}
         </Link>
+        <Link
+          href="/Signup"
+          className="ml-4 bg-yellow-400 text-black font-bold py-1 px-3 rounded-md hover:bg-yellow-500"
+        >
+          Signup
+        </Link>
       </div>
     </nav>
   );
