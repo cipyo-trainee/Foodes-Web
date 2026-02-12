@@ -10,11 +10,14 @@
   },
   "dependencies": {
     "@deemlol/next-icons": "^0.1.9",
+<<<<<<< HEAD
     "@heroui/card": "^2.2.27",
     "@heroui/react": "^2.8.8",
     "@heroui/system": "^2.4.26",
     "@heroui/theme": "^2.4.26",
     "framer-motion": "^12.34.0",
+=======
+>>>>>>> 9b22b4b13b1517bce36a02ff70113ef5bf37529e
     "next": "16.1.6",
     "react": "19.2.3",
     "react-dom": "19.2.3",
