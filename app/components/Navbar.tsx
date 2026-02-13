@@ -60,9 +60,8 @@ export default function Navbar() {
               <Link
                 href={link.path}
                 onClick={() => setOpen(false)}
-                className={`hover:text-gray-300 ${
-                  pathname === link.path ? "text-yellow-400" : ""
-                }`}
+                className={`hover:text-gray-300 ${pathname === link.path ? "text-yellow-400" : ""
+                  }`}
               >
                 {link.name}
               </Link>

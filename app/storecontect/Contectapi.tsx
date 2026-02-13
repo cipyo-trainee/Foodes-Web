@@ -1,4 +1,4 @@
-"use client"; // <-- MUST be the first line
+"use client"; 
 
 import React, { createContext, useContext, useState } from "react";
 import { foodItems } from "../Data/FoodItem";

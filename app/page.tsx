@@ -9,7 +9,7 @@ import DownloadAppCard from "./components/DownloadCard";
 
 export default function RootLayout() {
   return (
-    <div>
+    <div className="min-h-screen p-5 rounded-lg m-5 ">
       <main>
         <FoodBanner />
         <FoodCart />
