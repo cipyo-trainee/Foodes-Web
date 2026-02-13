@@ -7,6 +7,7 @@ import { useCart } from "../storecontect/Contectapi";
 import Image from "next/image";
 import logo from "../../public/logo.jpg";
 import { ShoppingCart, Menu, X } from "@deemlol/next-icons";
+import { DarkModeButton } from "./DarkModeButton";
 
 type NavLink = {
   name: string;
@@ -93,6 +94,7 @@ export default function Navbar() {
             </span>
           )}
         </Link>
+        <DarkModeButton/>
         <Link
           href="/Signup"
           className="ml-4 bg-yellow-400 text-black font-bold py-1 px-3 rounded-md hover:bg-yellow-500"
