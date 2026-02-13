@@ -1,5 +1,5 @@
 
-import { Button } from "@heroui/react";
+
 
 import ButtonCart from "./ButtonCart";
 import Image, { StaticImageData } from "next/image";

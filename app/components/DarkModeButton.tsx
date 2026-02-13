@@ -1,22 +1,24 @@
 "use client";
 
 import { useTheme } from "next-themes";
-import { FiMoon } from "react-icons/fi";
 
-export function DarkModeButton() {
-    const { resolvedTheme, setTheme } = useTheme();
+export function ThemeSwitcher() {
+  const { resolvedTheme, setTheme } = useTheme();
 
-    if (!resolvedTheme) return null; 
 
-    const isDark = resolvedTheme === "dark";
+  if (!resolvedTheme) return null;
 
-    return (
-        <FiMoon
-            onClick={() => setTheme(isDark ? "light" : "dark")}
-            className="px-4 py-2 rounded bg-black text-white dark:bg-white dark:text-black"
-        >
-            {isDark ? "Light Mode" : "Dark Mode"}
-        </FiMoon>
-        
-    );
+  const isDark = resolvedTheme === "dark";
+
+  return (
+    <div className="flex items-center gap-4">
+      <span>Theme: {resolvedTheme}</span>
+      <button
+        onClick={() => setTheme(isDark ? "light" : "dark")}
+        className="px-4 py-2 rounded bg-black text-white dark:bg-white dark:text-black"
+      >
+        Toggle Theme
+      </button>
+    </div>
+  );
 }
