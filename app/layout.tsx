@@ -26,13 +26,13 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
-        <NextThemesProvider attribute="class" defaultTheme="light">
-          <CartProvider>
-            <Navbar />
-            {children}
-            <Footer />
-          </CartProvider>
-        </NextThemesProvider>
+
+        <CartProvider>
+          <Navbar />
+          {children}
+          <Footer />
+        </CartProvider>
+
       </body>
     </html>
   );
