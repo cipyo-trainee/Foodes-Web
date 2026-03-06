@@ -7,8 +7,7 @@ import { useCart } from "../storecontect/Contectapi";
 import Image from "next/image";
 import logo from "../../public/logo.jpg";
 import { ShoppingCart, Menu, X } from "@deemlol/next-icons";
-
-
+import { FaUserShield } from "react-icons/fa6";
 
 type NavLink = {
   name: string;
@@ -27,7 +26,7 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
 
   return (
-    <nav className="flex flex-col md:flex-row items-center justify-between px-6 py-4 bg-gray-800 text-white rounded-b-lg">
+    <nav className="flex  flex-col md:flex-row items-center justify-between px-6 py-4 bg-gray-800 text-white ">
       {/* Top Row (logo + hamburger on mobile) */}
       <div className="w-full flex items-center justify-between md:w-auto">
         {/* Logo (UNCHANGED) */}
@@ -42,10 +41,7 @@ export default function Navbar() {
         </Link>
 
         {/* Hamburger (mobile only) */}
-        <button
-          className="md:hidden"
-          onClick={() => setOpen(!open)}
-        >
+        <button className="md:hidden" onClick={() => setOpen(!open)}>
           {open ? <X size={26} /> : <Menu size={26} />}
         </button>
       </div>
@@ -62,8 +58,9 @@ export default function Navbar() {
               <Link
                 href={link.path}
                 onClick={() => setOpen(false)}
-                className={`hover:text-gray-300 ${pathname === link.path ? "text-yellow-400" : ""
-                  }`}
+                className={`hover:text-gray-300 ${
+                  pathname === link.path ? "text-yellow-400" : ""
+                }`}
               >
                 {link.name}
               </Link>
@@ -72,12 +69,14 @@ export default function Navbar() {
         </ul>
 
         {/* Search */}
+        {/* Search */}
         <form className="relative">
           <input
             type="text"
             placeholder="Search food..."
-            className="px-3 py-1 rounded-l-md focus:outline-none text-white bg-gray-700 placeholder-gray-400"
+            className="pl-10 pr-3 py-1 rounded-l-md focus:outline-none text-white bg-gray-700 placeholder-gray-400"
           />
+
           <button
             type="submit"
             className="bg-yellow-400 px-3 py-1 rounded-r-md font-bold hover:bg-yellow-500"
@@ -87,7 +86,7 @@ export default function Navbar() {
         </form>
 
         {/* Cart */}
-        <Link href="/CartItem" className="relative hover:text-yellow-400">
+        <Link href="/CartItem" className="relative  hover:text-yellow-400">
           <ShoppingCart size={24} color="#0ca019" />
           {totalItems > 0 && (
             <span className="absolute -top-2 -right-2 bg-red-500 text-xs rounded-full px-1.5">
@@ -95,14 +94,14 @@ export default function Navbar() {
             </span>
           )}
         </Link>
- 
 
-   
         <Link
-          href="/Signup"
-          className="ml-4 bg-yellow-400 text-black font-bold py-1 px-3 rounded-md hover:bg-yellow-500"
+          href="/admin/dashboard"
+          className="ml-4 flex text-white items-center border  text-black font-bold py-1 px-3
+           rounded-xl border-green-500 "
         >
-          Signup
+          <FaUserShield className="mr-2" size={18} />
+          Admin
         </Link>
       </div>
     </nav>

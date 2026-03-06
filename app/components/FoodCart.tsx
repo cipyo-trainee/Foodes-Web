@@ -1,12 +1,13 @@
 "use client";
 
-import React from "react";
-import Image from "next/image";
-import { foodItems } from "../Data/FoodItem";
+
 import { useCart } from "../storecontect/Contectapi";
+import Image from "next/image";
+
+
 
 export default function FoodCart() {
-  const { cart, handleAddToCart, handleRemoveFromCart } = useCart();
+  const { foodItems, cart, handleAddToCart, handleRemoveFromCart } = useCart();
 
   return (
     <section className="p-6">
@@ -23,18 +24,17 @@ export default function FoodCart() {
             >
               <div className="relative h-40 w-full">
                 <Image
-                  src={item.image}
-                  alt={item.name}
+                  src={item.imageUrl}
+                  alt=''
                   fill
+                   unoptimized={true}
                   className="object-cover"
                 />
               </div>
 
               <div className="p-4">
                 <h3 className="font-semibold text-lg">{item.name}</h3>
-                <p className="text-gray-600 text-sm my-2">
-                  {item.description}
-                </p>
+                <p className="text-gray-600 text-sm my-2">{item.description}</p>
                 <p className="font-bold">${item.price}</p>
 
                 <div className="mt-3">
@@ -54,9 +54,7 @@ export default function FoodCart() {
                         −
                       </button>
 
-                      <span className="font-bold text-lg">
-                        {quantity}
-                      </span>
+                      <span className="font-bold text-lg">{quantity}</span>
 
                       <button
                         className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-400"

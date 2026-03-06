@@ -35,9 +35,9 @@ export default function Footer() {
         <div>
           <h3 className="font-semibold mb-2">Follow Us</h3>
           <div className="flex gap-4">
-            <a href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="hover:text-yellow-400">Twitter</a>
-            <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="hover:text-yellow-400">GitHub</a>
-            <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="hover:text-yellow-400">LinkedIn</a>
+            <Link href="https://twitter.com" target="_blank" rel="noopener noreferrer" className="hover:text-yellow-400">Twitter</Link>
+            <Link href="https://github.com" target="_blank" rel="noopener noreferrer" className="hover:text-yellow-400">GitHub</Link>
+            <Link href="https://linkedin.com" target="_blank" rel="noopener noreferrer" className="hover:text-yellow-400">LinkedIn</Link>
           </div>
         </div>
 
@@ -63,7 +63,7 @@ export default function Footer() {
 
       {/* Footer Bottom */}
       <div className="border-t border-gray-800 mt-8 pt-4 text-center text-gray-500 text-sm">
-        &copy; {new Date().getFullYear()} MyApp. All rights reserved. | 
+        &copy; {new Date().getFullYear()} MyApp. All rights reserved. |
         <Link href="/privacy" className="hover:text-yellow-400 ml-2">Privacy Policy</Link>
       </div>
     </footer>

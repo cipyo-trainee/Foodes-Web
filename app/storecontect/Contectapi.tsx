@@ -1,95 +1,103 @@
-"use client"; 
+"use client";
 
-import React, { createContext, useContext, useState } from "react";
-import { foodItems } from "../Data/FoodItem";
+import React, { createContext, useContext, useEffect, useState } from "react";
 
-export type CartItem = {
+type FoodItem = {
+  id: number;
+  name: string;
+  description: string;
+  price: number;
+  imageUrl: string;
+};
+
+type CartItem = {
   id: number;
   quantity: number;
 };
 
+export type User = { email: string } | null;
+
 export type CartContextType = {
   cart: CartItem[];
+  foodItems: FoodItem[];
   handleAddToCart: (id: number) => void;
   handleRemoveFromCart: (id: number) => void;
   totalItems: number;
   totalPrice: number;
-  user: string | null;
+  user: User;
   login: (email: string, password: string) => boolean;
-  signup: (email: string, password: string) => void;
+  signup: (email: string, password: string) => boolean;
   logout: () => void;
 };
 
 const CartContext = createContext<CartContextType | null>(null);
 
 export const CartProvider = ({ children }: { children: React.ReactNode }) => {
+  const [foodItems, setFoodItems] = useState<FoodItem[]>([]);
   const [cart, setCart] = useState<CartItem[]>([]);
-  const [user, setUser] = useState<string | null>(() => {
-    if (typeof window !== "undefined") {
-      return localStorage.getItem("loggedIn") === "true"
-        ? JSON.parse(localStorage.getItem("user") || "null")?.email
-        : null;
-    }
-    return null;
-  });
+  const [user, setUser] = useState<User>(null);
 
-  // Add item to cart
+  useEffect(() => {
+    const fetchFoodItems = async (): Promise<void> => {
+      try {
+        const res = await fetch("http://localhost:4000/api/products/ListData");
+        const data = await res.json();
+        setFoodItems(data);
+      } catch (error) {
+        console.error("Failed to fetch products", error);
+      }
+    };
+
+    fetchFoodItems();
+  }, []);
+
+  // ✅ Add to cart
   const handleAddToCart = (id: number) => {
     setCart((prev) => {
-      const existingItem = prev.find((item) => item.id === id);
-      if (existingItem) {
+      const existing = prev.find((item) => item.id === id);
+      if (existing) {
         return prev.map((item) =>
-          item.id === id ? { ...item, quantity: item.quantity + 1 } : item
+          item.id === id ? { ...item, quantity: item.quantity + 1 } : item,
         );
       }
       return [...prev, { id, quantity: 1 }];
     });
   };
 
+  // ✅ Remove from cart
   const handleRemoveFromCart = (id: number) => {
     setCart((prev) =>
       prev
         .map((item) =>
-          item.id === id ? { ...item, quantity: item.quantity - 1 } : item
+          item.id === id ? { ...item, quantity: item.quantity - 1 } : item,
         )
-        .filter((item) => item.quantity > 0)
+        .filter((item) => item.quantity > 0),
     );
   };
 
+  // ✅ Total items
   const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+
+  // ✅ Total price (match cart with products)
   const totalPrice = cart.reduce((sum, cartItem) => {
-    const item = foodItems.find((f) => f.id === cartItem.id);
-    return sum + (item ? item.price * cartItem.quantity : 0);
+    const product = foodItems.find((f) => f.id === cartItem.id);
+    return sum + (product ? product.price * cartItem.quantity : 0);
   }, 0);
 
-  // Signup
-  const signup = (email: string, password: string) => {
-    if (typeof window === "undefined") return;
-    const userData = { email, password };
-    localStorage.setItem("user", JSON.stringify(userData));
-    localStorage.setItem("loggedIn", "true");
-    setUser(email);
+  // ✅ Authentication helpers
+  const login = (email: string, password: string): boolean => {
+    // This is a placeholder implementation. Replace with real auth logic.
+    setUser({ email });
+    return true;
   };
 
-  // Login
-  const login = (email: string, password: string) => {
-    if (typeof window === "undefined") return false;
-    const userData = localStorage.getItem("user");
-    if (!userData) return false;
-    const userObj = JSON.parse(userData);
-    if (userObj.email === email && userObj.password === password) {
-      localStorage.setItem("loggedIn", "true");
-      setUser(email);
-      return true;
-    }
-    return false;
+  const signup = (email: string, password: string): boolean => {
+    // In a real app you would call an API and handle errors.
+    setUser({ email });
+    return true;
   };
 
-  // Logout
   const logout = () => {
-    if (typeof window === "undefined") return;
-    localStorage.removeItem("loggedIn");
-    localStorage.removeItem("user");
     setUser(null);
   };
 
@@ -97,6 +105,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
     <CartContext.Provider
       value={{
         cart,
+        foodItems,
         handleAddToCart,
         handleRemoveFromCart,
         totalItems,
@@ -112,7 +121,7 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-// Hook
+// Custom hook
 export const useCart = () => {
   const context = useContext(CartContext);
   if (!context) throw new Error("useCart must be used inside CartProvider");

@@ -5,7 +5,7 @@ import { useCart } from "../storecontect/Contectapi";
 
 export default function SignupForm() {
   const router = useRouter();
-  const { user, signup,logout } = useCart();
+  const { user, signup, } = useCart();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");

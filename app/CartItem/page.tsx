@@ -3,19 +3,19 @@
 import React from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useCart } from "../storecontect/Contectapi"; // Cart context
-import { foodItems } from "../Data/FoodItem";
+import { useCart, } from "../storecontect/Contectapi";
+
 
 export default function CartItemPage() {
   const router = useRouter();
-  const { cart, handleRemoveFromCart, totalPrice } = useCart();
+  const { foodItems, cart, handleRemoveFromCart, totalPrice } = useCart();
 
   const getItem = (id: number) => foodItems.find((item) => item.id === id);
 
   return (
     <div className="h-150 w-screen flex flex-col ">
-    
-  
+
+
 
       {/* Main Cart Area */}
       <main className="flex-1 overflow-y-auto p-8 max-w-6xl mx-auto w-full">
@@ -40,11 +40,12 @@ export default function CartItemPage() {
                 <div key={cartItem.id} className="contents">
                   <div className="w-20 h-20 relative">
                     <Image
-                      src={item.image}
-                      alt={item.name}
+                      src={item.imageUrl}
+                      alt=''
                       fill
                       sizes="(max-width: 768px) 100vw, 20vw"
                       className="object-cover rounded"
+                      unoptimized={true}
                     />
                   </div>
                   <div>{item.name}</div>
