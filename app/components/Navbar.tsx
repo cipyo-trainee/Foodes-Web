@@ -89,7 +89,7 @@ export default function Navbar() {
         <Link href="/CartItem" className="relative  hover:text-yellow-400">
           <ShoppingCart size={24} color="#0ca019" />
           {totalItems > 0 && (
-            <span className="absolute -top-2 -right-2 bg-red-500 text-xs rounded-full px-1.5">
+            <span className="absolute -top-2 -right-2 bg-red-500 text-xs rounded-full px-1.5 ">
               {totalItems}
             </span>
           )}
@@ -97,7 +97,7 @@ export default function Navbar() {
 
         <Link
           href="/admin/dashboard"
-          className="ml-4 flex text-white items-center border  text-black font-bold py-1 px-3
+          className="ml-4 flex text-white items-center border font-bold py-1 px-3
            rounded-xl border-green-500 "
         >
           <FaUserShield className="mr-2" size={18} />

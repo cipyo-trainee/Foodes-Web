@@ -85,12 +85,14 @@ export const CartProvider = ({ children }: { children: React.ReactNode }) => {
   }, 0);
 
   // ✅ Authentication helpers
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const login = (email: string, password: string): boolean => {
     // This is a placeholder implementation. Replace with real auth logic.
     setUser({ email });
     return true;
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const signup = (email: string, password: string): boolean => {
     // In a real app you would call an API and handle errors.
     setUser({ email });

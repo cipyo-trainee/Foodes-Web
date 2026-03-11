@@ -1,6 +1,6 @@
-import React from 'react';
-import { Button } from '@heroui/react';
-import confetti from 'canvas-confetti';
+import React from "react";
+import { Button } from "@heroui/react";
+import confetti from "canvas-confetti";
 
 const CustomButton = () => {
   const handleConfetti = () => {
@@ -14,11 +14,11 @@ const CustomButton = () => {
   return (
     <Button
       disableRipple
-       className="rounded-lg border border-white px-6 py-3 hover:bg-white hover:text-black transition-colors duration-300"
+      className="rounded-lg border border-white px-6 py-3 hover:bg-white hover:text-black transition-colors duration-300"
       size="lg"
       onPress={handleConfetti}
     >
-  appy Coupon
+      appy Coupon
     </Button>
   );
 };

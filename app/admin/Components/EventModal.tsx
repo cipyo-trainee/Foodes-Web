@@ -12,7 +12,6 @@ const AddEventModal = forwardRef<
   Props
 >(({ onSave }, ref) => {
   const [isOpen, setIsOpen] = useState(false);
-
   const [title, setTitle] = useState("");
   const [date, setDate] = useState("");
   const [startTime, setStartTime] = useState("");
@@ -69,6 +68,17 @@ const AddEventModal = forwardRef<
 
   return (
     <>
+      {!isOpen && (
+        <button
+          onClick={() => {
+            setIsOpen(true);
+          }}
+          className="bg-gray-800 w-50   text-white p-3"
+        >
+          Create Event
+        </button>
+      )}
+
       {isOpen && (
         <div
           className="fixed inset-0 flex items-center justify-center text-gray-500 bg-black/50 backdrop-blur-sm z-50"
@@ -133,12 +143,6 @@ const AddEventModal = forwardRef<
               ))}
             </select>
             <div className="flex justify-end gap-2">
-              <button
-                onClick={() => setIsOpen(false)}
-                className="px-4 py-2 bg-gray-300 rounded-lg hover:bg-gray-400 transition"
-              >
-                Cancel
-              </button>
               <button
                 onClick={createEvent}
                 className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition"

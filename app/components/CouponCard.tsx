@@ -1,6 +1,3 @@
-
-
-
 import ButtonCart from "./ButtonCart";
 import Image, { StaticImageData } from "next/image";
 
@@ -18,14 +15,10 @@ export default function CouponCard({
   image,
 }: CouponCardProps) {
   return (
-
     <div className="w-full my-6 px-4 sm:px-6 lg:px-12">
       <div className="relative h-60 w-full overflow-hidden rounded-2xl shadow-lg">
-
         <div className="w-full my-6">
           <div className="relative h-60 w-full overflow-hidden rounded-2xl">
-
-
             {/* Full width image */}
             <Image
               src={image}
@@ -41,7 +34,9 @@ export default function CouponCard({
 
             {/* Content */}
             <div className="absolute inset-0 flex flex-col justify-center items-center px-6 md:px-12 text-white">
-              <h2 className="text-3xl md:text-4xl font-bold text-center">{title}</h2>
+              <h2 className="text-3xl md:text-4xl font-bold text-center">
+                {title}
+              </h2>
 
               <p className="mt-2 max-w-2xl text-gray-200 text-center">
                 {description}
@@ -56,7 +51,6 @@ export default function CouponCard({
                 {/* Apply Coupon Button */}
 
                 <ButtonCart />
-
               </div>
             </div>
           </div>

@@ -13,11 +13,10 @@ export default function RootLayout() {
   return (
     <div className="min-h-screen p-5 rounded-lg m-5 ">
       <main>
-        
         <FoodBanner />
         <FoodCart />
-        <RestaurantFacilities/>
-        <MeetOurChefs/>
+        <RestaurantFacilities />
+        <MeetOurChefs />
         <DownloadAppCard />
         <CouponCard
           title="Flat 20% OFF on All Meals 🍔"
