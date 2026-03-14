@@ -64,7 +64,7 @@ export default function DashboardPage() {
 
         {/* Scrollable table */}
         <div className="overflow-x-auto scrollbar-hide">
-          <table className="w-full min-w-[600px] text-left">
+          <table className="w-full min-w-600px text-left">
             <thead>
               <tr className="border-b text-sm sm:text-base">
                 <th className="py-2">Order ID</th>

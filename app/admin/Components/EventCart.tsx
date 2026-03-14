@@ -1,7 +1,7 @@
-"use client";
+"use clint";
 
 type EventType = {
-  id: string | number;
+  id: number | string;
   title: string;
   date: string;
   startTime: string;
@@ -11,75 +11,47 @@ type EventType = {
   type: string;
 };
 
-export default function EventCard({
-  event,
-  onClose,
-}: {
-  event: EventType;
-  onClose?: () => void;
-}) {
-  const eventDate = new Date(event.date);
-  const today = new Date();
+type EventCardProps = {
+  events: EventType[];
+  onClose: () => void;
+};
 
-  today.setHours(0, 0, 0, 0);
-  eventDate.setHours(0, 0, 0, 0);
-
-  let badgeText = "";
-  let badgeColor = "";
-
-  if (eventDate < today) {
-    badgeText = "Closed Event";
-    badgeColor = "bg-red-500";
-  } else if (eventDate.getTime() === today.getTime()) {
-    badgeText = "Happening Today";
-    badgeColor = "bg-yellow-500";
-  } else {
-    badgeText = "Upcoming Event";
-    badgeColor = "bg-green-500";
-  }
-
+export default function EventCard({ events, onClose }: EventCardProps) {
   return (
-    <div className="relative border-gray-500 text-white    bg-gray-800 shadow-lg rounded-lg p-6">
-      {onClose && (
-        <button
-          onClick={onClose}
-          className="absolute top-2 left-2 text-gray-500 hover:text-black"
+    <div
+      className="bg-gray-800 text-white p-4 rounded shadow-md flex flex-col gap-2"
+      onClick={(e) => e.stopPropagation()}
+    >
+      <button
+        onClick={onClose}
+        className="self-end text-gray-300 hover:text-white font-bold"
+      >
+        X
+      </button>
+      {events.map((event) => (
+        <div
+          key={event.id}
+          className="p-2 rounded-md"
+          style={{
+            backgroundColor: event.color || "#555",
+          }}
         >
-          ✕
-        </button>
-      )}
-
-      {badgeText && (
-        <span
-          className={`absolute top-2 right-2 text-white text-xs px-2 py-1 rounded-full ${badgeColor}`}
-        >
-          {badgeText}
-        </span>
-      )}
-
-      <h2 className="text-xl font-bold mb-2">{event.title}</h2>
-
-      <p className="text-white mb-1">
-        <span className="font-semibold">Date:</span>{" "}
-        {eventDate.toLocaleDateString()}
-      </p>
-
-      <p className="text-white mb-1">
-        <span className="font-semibold">Time:</span>{" "}
-        {new Date(event.startTime).toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-        })}{" "}
-        -{" "}
-        {new Date(event.endTime).toLocaleTimeString([], {
-          hour: "2-digit",
-          minute: "2-digit",
-          
-        })}
-      </p>
-
-      <p className="text-white">{event.description}</p>
-      <p className="text-white">{event.type}</p>
+          <div className="font-semibold">{event.title}</div>
+          <div className="text-xs">
+            {new Date(event.startTime).toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            })}{" "}
+            -{" "}
+            {new Date(event.endTime).toLocaleTimeString([], {
+              hour: "2-digit",
+              minute: "2-digit",
+            })}
+          </div>
+          <div className="text-sm">{event.description}</div>
+          <div className="text-sm">{event.type}</div>
+        </div>
+      ))}
     </div>
   );
 }
