@@ -40,7 +40,6 @@ export default function AddEventModal({ onSave, selectedDate }: Props) {
     try {
       const startDateTime = new Date(`${date}T${startTime}`).toISOString();
       const endDateTime = new Date(`${date}T${endTime}`).toISOString();
-
       await axios.post("http://localhost:4000/api/event/createEvent", {
         title,
         date,
@@ -57,7 +56,6 @@ export default function AddEventModal({ onSave, selectedDate }: Props) {
       setEndTime("");
       setDescription("");
       setType("");
-
       if (onSave) onSave();
     } catch (err) {
       console.error(err);
