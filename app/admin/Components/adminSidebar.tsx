@@ -20,8 +20,8 @@ interface SidebarItem {
 
 const sidebarItems: SidebarItem[] = [
   { label: "Dashboard", href: "/admin/dashboard", icon: <FaTachometerAlt /> },
-  { label: "Upload", href: "/admin/upload", icon: <FaUpload /> },
-  { label: "ListProducts", href: "/admin/ListProducts", icon: <FaList /> },
+  { label: "add Item", href: "/admin/upload", icon: <FaUpload /> },
+  { label: "List Item", href: "/admin/ListProducts", icon: <FaList /> },
   { label: "Clendar", href: "/admin/calendar", icon: <FaCalendarAlt /> }, // Calendar icon
   {
     label: "Customer-query",
