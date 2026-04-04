@@ -22,7 +22,7 @@ const sidebarItems: SidebarItem[] = [
   { label: "Dashboard", href: "/admin/dashboard", icon: <FaTachometerAlt /> },
   { label: "add Item", href: "/admin/upload", icon: <FaUpload /> },
   { label: "List Item", href: "/admin/ListProducts", icon: <FaList /> },
-  { label: "Clendar", href: "/admin/calendar", icon: <FaCalendarAlt /> }, // Calendar icon
+  { label: "Clendar", href: "/admin/calendar", icon: <FaCalendarAlt /> },
   {
     label: "Customer-query",
     href: "/admin/customerquery",

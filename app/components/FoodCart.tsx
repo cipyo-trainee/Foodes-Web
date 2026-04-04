@@ -1,10 +1,7 @@
 "use client";
 
-
 import { useCart } from "../storecontect/Contectapi";
 import Image from "next/image";
-
-
 
 export default function FoodCart() {
   const { foodItems, cart, handleAddToCart, handleRemoveFromCart } = useCart();
@@ -16,7 +13,6 @@ export default function FoodCart() {
         {foodItems.map((item) => {
           const cartItem = cart.find((c) => c.id === item.id);
           const quantity = cartItem?.quantity || 0;
-
           return (
             <div
               key={item.id}
@@ -25,9 +21,9 @@ export default function FoodCart() {
               <div className="relative h-40 w-full">
                 <Image
                   src={item.imageUrl}
-                  alt=''
+                  alt=""
                   fill
-                   unoptimized={true}
+                  unoptimized={true}
                   className="object-cover"
                 />
               </div>

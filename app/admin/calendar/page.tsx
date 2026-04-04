@@ -16,6 +16,7 @@ type EventType = {
   description: string;
   type: string;
 };
+
 const typeColors: Record<string, string> = {
   MEETING: "#3b82f6",
   BIRTHDAY: "#f59e0b",
@@ -24,6 +25,7 @@ const typeColors: Record<string, string> = {
   GENERAL: "#8b5cf6",
   DEFAULT: "#9ca3af",
 };
+
 const typeLabels: Record<string, string> = {
   MEETING: "Meeting",
   BIRTHDAY: "Birthday",
@@ -31,6 +33,7 @@ const typeLabels: Record<string, string> = {
   PERSONAL: "Personal",
   GENERAL: "General",
 };
+
 const formatDate = (date: Date | string) =>
   new Date(date).toLocaleDateString("en-CA");
 
@@ -59,6 +62,7 @@ export default function Calendar() {
       await fetchData();
     })();
   }, [fetchData]);
+
   const getWeekDays = (date: Date) => {
     const start = new Date(date);
     start.setDate(date.getDate() - date.getDay());
@@ -80,6 +84,7 @@ export default function Calendar() {
   };
 
   const hours = useMemo(() => Array.from({ length: 12 }, (_, i) => i + 8), []);
+
   const currentDates =
     view === "day"
       ? [currentDate]
@@ -94,6 +99,7 @@ export default function Calendar() {
     else d.setMonth(d.getMonth() - 1);
     setCurrentDate(new Date(d));
   };
+
   const next = () => {
     const d = new Date(currentDate);
     if (view === "day") d.setDate(d.getDate() + 1);
@@ -188,7 +194,7 @@ export default function Calendar() {
             return (
               <div
                 key={dateStr}
-                className="border border-gray-800 h-28 p-2 bg-gray-900  hover:bg-gray-800 transition cursor-pointer rounded-md"
+                className="border border-gray-800 h-28 p-2 bg-gray-900 hover:bg-gray-800 transition cursor-pointer rounded-md relative"
                 onClick={(ev) => {
                   ev.stopPropagation();
                   setSelectedEvents(dayEvents);
@@ -202,7 +208,7 @@ export default function Calendar() {
                   {Object.entries(grouped).map(([type, list]) => (
                     <div
                       key={type}
-                      className="text-[10px] px-2 py-2px rounded-full text-white w-fit"
+                      className="text-[10px] px-2 py-1 rounded-full text-white w-fit"
                       style={{
                         backgroundColor: typeColors[type] || typeColors.DEFAULT,
                       }}
@@ -218,7 +224,7 @@ export default function Calendar() {
       ) : (
         /* DAY / WEEK VIEW */
         <div
-          className="grid border border-gray-800 rounded-xl overflow-hidden shadow-lg"
+          className="grid border border-gray-800 rounded-xl overflow-hidden shadow-lg relative"
           style={{
             gridTemplateColumns: `80px repeat(${currentDates.length}, 1fr)`,
           }}
@@ -237,49 +243,65 @@ export default function Calendar() {
               <div className="font-semibold">{day.getDate()}</div>
             </div>
           ))}
+
           {hours.map((hour) => (
             <div key={hour} className="contents">
-              <div className="bg-gray-900 text-gray-400 flex items-center justify-center border-t border-gray-800">
+              <div className="bg-gray-900 text-gray-400 flex items-center justify-center border-t  border-gray-800">
                 {hour}:00
               </div>
               {currentDates.map((day) => {
                 const dateStr = formatDate(day);
+
+                // Events that start at this hour
                 const cellEvents = events.filter((event) => {
-                  const eventDate = formatDate(event.date);
                   const startHour = new Date(event.startTime).getHours();
-                  return eventDate === dateStr && startHour === hour;
+                  const endHour = new Date(event.endTime).getHours();
+                  return (
+                    formatDate(event.date) === dateStr && startHour === hour
+                  );
                 });
-                const grouped = cellEvents.reduce<Record<string, EventType[]>>(
-                  (acc, e) => {
-                    if (!acc[e.type]) acc[e.type] = [];
-                    acc[e.type].push(e);
-                    return acc;
-                  },
-                  {},
-                );
                 return (
                   <div
                     key={`${dateStr}-${hour}`}
-                    className="border border-gray-800 rounded-md h-10 p-1
-                     hover:bg-gray-800 transition cursor-pointer"
                     onClick={(e) => {
                       e.stopPropagation();
                       setSelectedEvents(cellEvents);
                       setSelectedDate(dateStr);
                     }}
+                    className="relative h-20 border-b  border-gray-800 cursor-pointer"
                   >
-                    {Object.entries(grouped).map(([type, list]) => (
-                      <div
-                        key={type}
-                        className="text-xs text-white px-2 py-2px rounded-full w-fit"
-                        style={{
-                          backgroundColor:
-                            typeColors[type] || typeColors.DEFAULT,
-                        }}
-                      >
-                        {list.length} {typeLabels[type]}
-                      </div>
-                    ))}
+                    {cellEvents.map((ev, index) => {
+                      const durationHours = Math.max(
+                        (new Date(ev.endTime).getTime() -
+                          new Date(ev.startTime).getTime()) /
+                          (1000 * 60 * 60),
+                        0.5,
+                      );
+
+                      const count = cellEvents.length; // number of events in same hour
+                      const width = count === 1 ? "100%" : `${100 / count}%`; // full width if only one
+                      const left =
+                        count === 1 ? "0%" : `${(100 / count) * index}%`; // position each event
+                      return (
+                        <div
+                          key={ev.id}
+                          className="absolute top-0 p-1 rounded-md text-xs overflow-hidden box-border"
+                          style={{
+                            borderColor:
+                              typeColors[ev.type] || typeColors.DEFAULT,
+                            borderStyle: "solid",
+                            borderWidth: "1px",
+                            height: `${durationHours * 100}%`,
+                            width,
+                            left,
+                          }}
+                        >
+                          <div className="font-bold truncate text-green-500">
+                            {ev.title}
+                          </div>
+                        </div>
+                      );
+                    })}
                   </div>
                 );
               })}
@@ -297,8 +319,7 @@ export default function Calendar() {
             />
           </div>
         )}
-
-        {/* Add Event Modal Button */}
+        {/* Add Event Modal */}
         {selectedEvents.length === 0 && (
           <div>
             <AddEventModal onSave={fetchData} selectedDate={selectedDate} />
