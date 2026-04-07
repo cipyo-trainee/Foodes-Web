@@ -40,7 +40,7 @@ export default function AdminSidebar() {
       </div>
 
       {/* Scrollable Menu */}
-      <ul className="flex-1 mt-4 overflow-y-auto">
+      <ul className="flex-1 mt-4 overflow-y-auto ">
         {sidebarItems.map((item) => (
           <li key={item.href}>
             <Link

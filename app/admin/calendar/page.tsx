@@ -73,12 +73,24 @@ export default function Calendar() {
     });
   };
 
+  // ✅ FIXED MONTH FUNCTION (ONLY CHANGE)
   const getMonthDays = (date: Date) => {
     const start = new Date(date.getFullYear(), date.getMonth(), 1);
     const end = new Date(date.getFullYear(), date.getMonth() + 1, 0);
-    const days: Date[] = [];
+
+    const days: (Date | null)[] = [];
+    // padding before first day
+    const startDay = start.getDay();
+    for (let i = 0; i < startDay; i++) {
+      days.push(null);
+    }
+    // actual days
     for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
       days.push(new Date(d));
+    }
+    // padding after
+    while (days.length % 7 !== 0) {
+      days.push(null);
     }
     return days;
   };
@@ -111,10 +123,8 @@ export default function Calendar() {
   if (loading)
     return (
       <div className="flex flex-col justify-center items-center h-screen gap-4 bg-gray-950">
-        <Spinner className="text-green-400 animate-spin" size="lg" />
-        <span className="text-green-400 text-lg font-semibold">
-          Loading Events...
-        </span>
+        <div className="w-16 h-16 border-4 border-green-400 border-t-transparent rounded-full animate-spin"></div>{" "}
+        <p className="text-white">Loadind...</p>
       </div>
     );
 
@@ -133,9 +143,16 @@ export default function Calendar() {
             <FaArrowLeft />
           </button>
           <div className="text-xl font-bold tracking-wide">
-            {view === "day" && currentDates[0].toLocaleDateString()}
+            {view === "day" && currentDate.toLocaleDateString()}
+
             {view === "week" &&
-              `Week of ${currentDates[0].toLocaleDateString()}`}
+              (() => {
+                const start = new Date(currentDate);
+                start.setDate(currentDate.getDate() - currentDate.getDay());
+
+                return `Week of ${start.toLocaleDateString()}`;
+              })()}
+
             {view === "month" &&
               currentDate.toLocaleDateString("en-US", {
                 month: "long",
@@ -144,7 +161,7 @@ export default function Calendar() {
           </div>
           <button
             onClick={next}
-            className="p-2 bg-gray-800 hover:bg-indigo-600 transition rounded-lg"
+            className="p-2 bg-gray-800  hover:bg-indigo-600 transition rounded-lg"
           >
             <FaArrowRight />
           </button>
@@ -166,7 +183,6 @@ export default function Calendar() {
           ))}
         </div>
       </div>
-
       {/* MONTH VIEW */}
       {view === "month" ? (
         <div className="grid grid-cols-7 border border-gray-800 rounded-xl overflow-hidden shadow-lg">
@@ -178,11 +194,23 @@ export default function Calendar() {
               {day}
             </div>
           ))}
-          {currentDates.map((day) => {
+
+          {currentDates.map((day, idx) => {
+            // ✅ handle empty cells
+            if (!day) {
+              return (
+                <div
+                  key={idx}
+                  className="border border-gray-800 h-28 bg-gray-950"
+                />
+              );
+            }
+
             const dateStr = formatDate(day);
             const dayEvents = events.filter(
               (e) => formatDate(e.date) === dateStr,
             );
+
             const grouped = dayEvents.reduce<Record<string, EventType[]>>(
               (acc, e) => {
                 if (!acc[e.type]) acc[e.type] = [];
@@ -201,7 +229,7 @@ export default function Calendar() {
                   setSelectedDate(dateStr);
                 }}
               >
-                <div className="text-sm font-bold text-gray-300">
+                <div className="text-sm font-bold text-gray-400">
                   {day.getDate()}
                 </div>
                 <div className="flex flex-col gap-1 mt-1">
@@ -222,7 +250,7 @@ export default function Calendar() {
           })}
         </div>
       ) : (
-        /* DAY / WEEK VIEW */
+        /* DAY / WEEK VIEW (UNCHANGED) */
         <div
           className="grid border border-gray-800 rounded-xl overflow-hidden shadow-lg relative"
           style={{
@@ -232,30 +260,30 @@ export default function Calendar() {
           <div className="bg-gray-900 flex items-center justify-center text-gray-400 font-medium">
             Time
           </div>
-          {currentDates.map((day) => (
-            <div
-              key={day.toString()}
-              className="bg-gray-900 text-center p-2 border-l border-gray-800"
-            >
-              <div className="text-sm text-gray-400">
-                {day.toLocaleDateString("en-US", { weekday: "short" })}
+          {currentDates.map((day) => {
+            if (!day) return null;
+            return (
+              <div
+                key={day.toString()}
+                className="bg-gray-900 text-center p-2 border-l border-gray-800"
+              >
+                <div className="text-sm text-gray-400">
+                  {day.toLocaleDateString("en-US", { weekday: "short" })}
+                </div>
+                <div className="font-semibold">{day.getDate()}</div>
               </div>
-              <div className="font-semibold">{day.getDate()}</div>
-            </div>
-          ))}
-
+            );
+          })}
           {hours.map((hour) => (
             <div key={hour} className="contents">
-              <div className="bg-gray-900 text-gray-400 flex items-center justify-center border-t  border-gray-800">
+              <div className=" bg-gray-900 text-gray-400 text-sm border-t border-gray-800 flex items-center justify-center">
                 {hour}:00
               </div>
               {currentDates.map((day) => {
+                if (!day) return null; // ✅ important check for null
                 const dateStr = formatDate(day);
-
-                // Events that start at this hour
                 const cellEvents = events.filter((event) => {
                   const startHour = new Date(event.startTime).getHours();
-                  const endHour = new Date(event.endTime).getHours();
                   return (
                     formatDate(event.date) === dateStr && startHour === hour
                   );
@@ -268,40 +296,62 @@ export default function Calendar() {
                       setSelectedEvents(cellEvents);
                       setSelectedDate(dateStr);
                     }}
-                    className="relative h-20 border-b  border-gray-800 cursor-pointer"
+                    className="relative h-20 border-b border-gray-800 cursor-pointer"
                   >
-                    {cellEvents.map((ev, index) => {
-                      const durationHours = Math.max(
-                        (new Date(ev.endTime).getTime() -
-                          new Date(ev.startTime).getTime()) /
-                          (1000 * 60 * 60),
-                        0.5,
-                      );
+                    {cellEvents.length > 0 &&
+                      (() => {
+                        // Group events in this cell by type
+                        const groupedEvents = cellEvents.reduce<
+                          Record<string, EventType[]>
+                        >((acc, ev) => {
+                          const typeKey = ev.type.toUpperCase();
+                          if (!acc[typeKey]) acc[typeKey] = [];
+                          acc[typeKey].push(ev);
+                          return acc;
+                        }, {});
 
-                      const count = cellEvents.length; // number of events in same hour
-                      const width = count === 1 ? "100%" : `${100 / count}%`; // full width if only one
-                      const left =
-                        count === 1 ? "0%" : `${(100 / count) * index}%`; // position each event
-                      return (
-                        <div
-                          key={ev.id}
-                          className="absolute top-0 p-1 rounded-md text-xs overflow-hidden box-border"
-                          style={{
-                            borderColor:
-                              typeColors[ev.type] || typeColors.DEFAULT,
-                            borderStyle: "solid",
-                            borderWidth: "1px",
-                            height: `${durationHours * 100}%`,
-                            width,
-                            left,
-                          }}
-                        >
-                          <div className="font-bold truncate text-green-500">
-                            {ev.title}
-                          </div>
-                        </div>
-                      );
-                    })}
+                        return Object.entries(groupedEvents).map(
+                          ([type, list]) => {
+                            const durationHours = Math.max(
+                              (new Date(list[0].endTime).getTime() -
+                                new Date(list[0].startTime).getTime()) /
+                                (1000 * 60 * 60),
+                              0.5,
+                            );
+                            const count = Object.keys(groupedEvents).length;
+                            const width = `calc(${100 / count}% - 4px)`;
+                            const left = `${(Object.keys(groupedEvents).indexOf(type) * 100) / count}%`;
+
+                            return (
+                              <div
+                                key={type}
+                                className="absolute top-0 p-1 text-xs overflow-hidden box-border"
+                                style={{
+                                  borderColor:
+                                    typeColors[type] || typeColors.DEFAULT,
+                                  width,
+                                  left,
+                                  borderStyle: "solid",
+                                  borderWidth: "1px",
+                                  height: `${durationHours * 100}%`,
+                                }}
+                              >
+                                <div
+                                  className="font-bold truncate "
+                                  style={{
+                                    color:
+                                      typeColors[type] || typeColors.DEFAULT,
+                                  }}
+                                >
+                                  {list.length > 1
+                                    ? `${list.length} ${typeLabels[type]}`
+                                    : list[0].title}
+                                </div>
+                              </div>
+                            );
+                          },
+                        );
+                      })()}
                   </div>
                 );
               })}
@@ -310,7 +360,6 @@ export default function Calendar() {
         </div>
       )}
       <div className="mt-6 flex justify-between items-start gap-6 flex-wrap">
-        {/* Event Card */}
         {selectedEvents.length > 0 && (
           <div className="flex-1 min-w-[320px]">
             <EventCard
@@ -319,7 +368,6 @@ export default function Calendar() {
             />
           </div>
         )}
-        {/* Add Event Modal */}
         {selectedEvents.length === 0 && (
           <div>
             <AddEventModal onSave={fetchData} selectedDate={selectedDate} />

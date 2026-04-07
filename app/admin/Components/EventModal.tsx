@@ -27,7 +27,9 @@ export default function AddEventModal({ onSave, selectedDate }: Props) {
 
   useEffect(() => {
     if (selectedDate) {
-      setDate(selectedDate);
+      (async () => {
+        await setDate(selectedDate);
+      })();
     }
   }, [selectedDate]);
 
@@ -91,14 +93,12 @@ export default function AddEventModal({ onSave, selectedDate }: Props) {
           onChange={(e) => setTitle(e.target.value)}
           className="w-full mb-3 p-2 border border-gray-500 rounded bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
-
         <input
           type="date"
           value={date}
           onChange={(e) => setDate(e.target.value)}
           className="w-full mb-3 p-2 border border-gray-500 rounded bg-gray-800 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
-
         <div className="flex gap-2 mb-3">
           <input
             type="time"
