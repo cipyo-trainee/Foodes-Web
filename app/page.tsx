@@ -9,10 +9,12 @@ import DownloadAppCard from "./components/DownloadCard";
 import RestaurantFacilities from "./components/RestaurantFacilities";
 import MeetOurChefs from "./components/MeetOurChefs";
 
+
 export default function RootLayout() {
   return (
     <div className="min-h-screen p-5 rounded-lg m-5 ">
       <main>
+     
         <FoodBanner />
         <FoodCart />
         <RestaurantFacilities />

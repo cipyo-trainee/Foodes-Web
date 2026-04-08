@@ -6,6 +6,7 @@ import { ToastContainer } from "react-toastify";
 import { CartProvider } from "./storecontect/Contectapi";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
+import FoodModal from "./components/FoodModal";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -35,9 +36,8 @@ export default function RootLayout({
       <body className={`${geistSans.variable} ${geistMono.variable}`}>
         <CartProvider>
           <ToastContainer />
-
           <Navbar />
-
+          <FoodModal />
           {children}
           <Footer />
         </CartProvider>
